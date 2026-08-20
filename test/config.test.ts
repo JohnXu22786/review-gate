@@ -44,6 +44,21 @@ describe('resolveConfig', () => {
     assert.throws(() => resolveConfig({ cwd: 'C:\\r', maxFindings: 0 } as never), /maxFindings/)
   })
 
+  it('validates the llm temperature range and integer caps', () => {
+    assert.throws(() => resolveConfig({ cwd: 'C:\\r', llm: { enabled: true, temperature: 2.5 } } as never), /temperature/)
+    assert.throws(() => resolveConfig({ cwd: 'C:\\r', llm: { enabled: true, temperature: -0.1 } } as never), /temperature/)
+    assert.throws(() => resolveConfig({ cwd: 'C:\\r', llm: { enabled: true, maxFindingsPerFile: 1.5 } } as never), /maxFindingsPerFile/)
+    assert.throws(() => resolveConfig({ cwd: 'C:\\r', llm: { enabled: true, maxFilesPerRun: 0 } } as never), /maxFilesPerRun/)
+    // boundary values are accepted
+    const c = resolveConfig({
+      cwd: 'C:\\r',
+      llm: { enabled: true, temperature: 0, maxFindingsPerFile: 0, maxFilesPerRun: 1 },
+    })
+    assert.equal(c.llm.temperature, 0)
+    assert.equal(c.llm.maxFindingsPerFile, 0)
+    assert.equal(c.llm.maxFilesPerRun, 1)
+  })
+
   it('derives a stable rules version that changes when rules change', () => {
     const rules = defaultRules()
     const v1 = deriveRulesVersion(rules, { severe: 0, warning: 0, suggestion: -1, requiredAcknowledge: [] })
