@@ -1,0 +1,47 @@
+{
+  "//": "Example review-gate configuration. Place at <repo>/.review-gate.config.json. ",
+  "//2": "LLM-assisted review is optional; enable it and set provider/model where the harness does not route a default model. The gate thresholds decide pass/fail deterministically either way.",
+  "cwd": "/absolute/path/to/your/repository",
+  "store": {
+    "root": ".review-gate",
+    "//": "Optional: pin a stable repo identity so sessions/approvals are shared across all checkouts and CI (e.g. your remote URL).",
+    "repoId": "github.com/acme/your-repo"
+  },
+  "gate": {
+    "severe": 0,
+    "warning": 0,
+    "suggestion": -1,
+    "requiredAcknowledge": []
+  },
+  "approvals": {
+    "required": 2
+  },
+  "llm": {
+    "enabled": false,
+    "provider": "deepseek-official",
+    "model": "deepseek-chat",
+    "temperature": 0.2,
+    "maxFindingsPerFile": 20,
+    "maxFilesPerRun": 20
+  },
+  "onEmptyDiff": "pass",
+  "maxFindings": 500,
+  "rules": {
+    "todo": {
+      "id": "todo",
+      "severity": "warning",
+      "pattern": "\\b(?:TODO|FIXME)\\b",
+      "message": "A TODO/FIXME marker was introduced.",
+      "suggestion": "Resolve or remove the marker before merging.",
+      "files": "\\..+$"
+    },
+    "hardcoded-endpoint": {
+      "id": "hardcoded-endpoint",
+      "severity": "warning",
+      "pattern": "(?:wss?|https?)://[^\"'` ]+(?:localhost|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)",
+      "message": "A hardcoded socket/HTTP endpoint was added.",
+      "suggestion": "Inject endpoints through configuration or environment variables.",
+      "files": "\\.(js|ts|jsx|tsx)$"
+    }
+  }
+}

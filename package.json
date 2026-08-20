@@ -1,0 +1,72 @@
+{
+  "name": "review-gate",
+  "version": "0.1.0",
+  "description": "A DeepSeek Harness (dsh) bundle that turns code review into a hard gate: deterministic severity rules, LLM-assisted findings, team approval quorum and a compliance audit trail.",
+  "type": "module",
+  "main": "./dist/dsh/plugin.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/dsh/plugin.d.ts",
+      "default": "./dist/dsh/plugin.js"
+    },
+    "./core": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "default": "./dist/cli.js"
+    }
+  },
+  "bin": {
+    "review-gate": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "LICENSE",
+    "examples"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true});require('fs').rmSync('dist-test',{recursive:true,force:true});\"",
+    "build": "tsc -p tsconfig.json",
+    "build:test": "tsc -p tsconfig.test.json",
+    "test": "npm run build:test && node --test \"dist-test/test/*.test.js\"",
+    "cli": "node dist/cli.js"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "bundle",
+    "code-review",
+    "gate",
+    "approval",
+    "compliance",
+    "cordis"
+  ],
+  "author": "JohnXu22786",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnXu22786/review-gate.git"
+  },
+  "homepage": "https://github.com/JohnXu22786/review-gate#readme",
+  "bugs": {
+    "url": "https://github.com/JohnXu22786/review-gate/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "typescript": "^5.5.4"
+  }
+}

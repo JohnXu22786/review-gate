@@ -1,0 +1,11 @@
+# dependencies / build output
+node_modules/
+dist/
+dist-test/
+
+# local scratch
+*.log
+
+# NOTE: `.review-gate/` (the store + audit trail) is deliberately NOT ignored:
+# some deployments choose to commit it as a durable per-repo compliance artifact
+# that CI reads. Add it here if your policy keeps it local.

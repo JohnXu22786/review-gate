@@ -1,0 +1,52 @@
+# Example: enforce the review-gate in a GitHub Actions merge pipeline.
+#
+# Model: reviewers create/update the review state + audit trail in
+# <repo>/.review-gate/ (via the CLI or dsh tools) and commit it to the
+# repository. This job only VERIFIES the deterministically recomputable
+# verdict and fails the merge unless BOTH the automatic thresholds and the
+# approval quorum are satisfied. Use ONE consistent scope for a given gate in
+# every step and everywhere reviewers record approvals (default: working tree).
+#
+# Prerequisites:
+#   - review-gate is installed (npm i -g review-gate, or use the dsh CLI).
+#   - a config file <repo>/.review-gate.config.json exists (see
+#     examples/review-gate.config.json), or defaults are used.
+#   - `.review-gate/` (sessions + audit.jsonl) is committed to the repo.
+name: review-gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # fetches the committed .review-gate/ trail
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install the gate CLI
+        run: npm i -g review-gate@0.1.0
+
+      # HARD GATE: exit 0 only when the reviewed state passes the automatic
+      # thresholds AND the approval quorum. Set this job as a required check
+      # in branch protection to block merges. JSON output is machine-readable
+      # for downstream tooling.
+      - name: Gate check (merge)
+        id: gate
+        run: review-gate gate-check --dir "$GITHUB_WORKSPACE" --mode merge --json
+
+      # Keep the full session + append-only audit trail as a compliance
+      # artifact for every run.
+      - name: Upload trail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-gate-trail
+          path: .review-gate

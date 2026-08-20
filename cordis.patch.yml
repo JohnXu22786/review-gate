@@ -1,0 +1,39 @@
+# review-gate bundle patch
+#
+# Mounts the review-gate plugin as a row of the profile layer. Later layers
+# and the user's profile `cordis.patch.yml` override these values by `id`
+# (a patch replaces a row's whole `config`; it does not deep-merge).
+- insert:
+    # The deterministic code-review gate + team approval + audit trail, exposed
+    # as ctx.tools: review_run / review_status / review_approve /
+    # review_request_changes / review_reject / review_acknowledge /
+    # gate_check / review_export.
+    - id: review-gate
+      name: review-gate
+      config:
+        # The git repository to review. Override per deployment: the harness
+        # working directory is usually NOT the repository being reviewed.
+        cwd: !!js process.cwd()
+        # Where sessions and the audit trail live (relative to `cwd`).
+        store:
+          root: '.review-gate'
+        # Deterministic gate thresholds. -1 means unlimited.
+        gate:
+          severe: 0
+          warning: 0
+          suggestion: -1
+          requiredAcknowledge: []
+        # Team approval quorum required to unlock the merge gate.
+        approvals:
+          required: 1
+        # LLM-assisted findings (advisory only; the gate thresholds decide
+        # pass/fail deterministically). Enable explicitly and, where your
+        # deployment does not route a default provider/model, set provider /
+        # model below. Skipped automatically when ctx.llm is unavailable.
+        llm:
+          enabled: false
+          # provider: deepseek-official
+          # model: deepseek-chat
+        # 'pass' lets an empty diff through; 'fail' requires an explicit
+        # review even when nothing changed.
+        onEmptyDiff: pass
