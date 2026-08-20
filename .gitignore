@@ -2,9 +2,13 @@
 node_modules/
 dist/
 dist-test/
+.npm/
+*.tsbuildinfo
+*.tgz
 
 # local scratch
 *.log
+.DS_Store
 
 # NOTE: `.review-gate/` (the store + audit trail) is deliberately NOT ignored:
 # some deployments choose to commit it as a durable per-repo compliance artifact
