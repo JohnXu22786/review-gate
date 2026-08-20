@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A DeepSeek Harness (dsh) bundle that turns code review into a hard gate: deterministic severity rules, LLM-assisted findings, team approval quorum and a compliance audit trail.",
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/dsh/plugin.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -43,6 +44,7 @@
     "build": "tsc -p tsconfig.json",
     "build:test": "tsc -p tsconfig.test.json",
     "test": "npm run build:test && node --test \"dist-test/test/*.test.js\"",
+    "prepublishOnly": "npm run build",
     "cli": "node dist/cli.js"
   },
   "keywords": [
