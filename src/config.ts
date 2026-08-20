@@ -187,11 +187,13 @@ export function resolveConfig(partial?: Partial<GateConfig>): GateConfig {
     throw new TypeError('approvals.required must be a positive integer')
   }
   if (typeof llm.enabled !== 'boolean') throw new TypeError('llm.enabled must be a boolean')
-  if (typeof llm.temperature !== 'number') throw new TypeError('llm.temperature must be a number')
-  if (typeof llm.maxFindingsPerFile !== 'number' || llm.maxFindingsPerFile < 0) {
+  if (typeof llm.temperature !== 'number' || Number.isNaN(llm.temperature) || llm.temperature < 0 || llm.temperature > 2) {
+    throw new TypeError('llm.temperature must be a number in the range 0..2')
+  }
+  if (typeof llm.maxFindingsPerFile !== 'number' || llm.maxFindingsPerFile < 0 || !Number.isInteger(llm.maxFindingsPerFile)) {
     throw new TypeError('llm.maxFindingsPerFile must be a non-negative integer')
   }
-  if (typeof llm.maxFilesPerRun !== 'number' || llm.maxFilesPerRun < 1) {
+  if (typeof llm.maxFilesPerRun !== 'number' || llm.maxFilesPerRun < 1 || !Number.isInteger(llm.maxFilesPerRun)) {
     throw new TypeError('llm.maxFilesPerRun must be a positive integer')
   }
   if (p.onEmptyDiff !== undefined && p.onEmptyDiff !== 'pass' && p.onEmptyDiff !== 'fail') {
