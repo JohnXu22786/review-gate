@@ -1,5 +1,9 @@
 # review-gate
 
+[![npm version](https://img.shields.io/npm/v/review-gate)](https://www.npmjs.com/package/review-gate)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[中文说明](./README.zh.md)
+
 A **DeepSeek Harness (dsh) bundle** that turns code review into a hard gate.
 Unlike read-only review/diff viewers, review-gate closes the loop: it produces
 graded findings, blocks or passes merges deterministically, requires a team
