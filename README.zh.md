@@ -107,6 +107,14 @@ review-gate/
 > 要求 `^22.19.0 || >=24.0.0`（以 harness 安装文档为准）。`git` 须在 `PATH` 中且
 > 目标目录为 git 工作区。
 
+### 安装
+
+```sh
+npm install -g review-gate   # 面向任意 git 仓库的独立 CLI
+```
+
+或作为 dsh bundle 安装（见下文）。
+
 ### 使用 CLI
 
 ```sh

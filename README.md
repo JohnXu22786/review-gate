@@ -121,6 +121,14 @@ review-gate/
 > (check the harness install docs). `git` must be on `PATH` and the target
 > directory must be a git working tree.
 
+### Install
+
+```sh
+npm install -g review-gate   # standalone CLI for any git repo
+```
+
+or install it as a dsh bundle (see below).
+
 ### Run the CLI
 
 ```sh
