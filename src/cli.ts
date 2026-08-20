@@ -318,8 +318,10 @@ async function cmdExport(gate: ReviewGate, flags: Flags, positionals: string[]):
   const content = format === 'markdown' ? out.report.markdown : out.report.json
   const target = stringFlag(flags, 'out')
   if (target) {
-    const parent = target.slice(0, Math.max(target.lastIndexOf('/'), target.lastIndexOf('\\')))
-    if (parent) mkdirSync(parent, { recursive: true })
+    // Only create the parent directory when one exists; a bare filename like
+    // `report.md` must never be mistaken for a directory component.
+    const parent = dirname(target)
+    if (parent !== '.') mkdirSync(parent, { recursive: true })
     await writeFile(target, content, 'utf8')
     if (flags.json === true) process.stdout.write(JSON.stringify({ ok: true, file: target, format }) + '\n')
     else process.stdout.write(`report written to '${target}'\n`)
